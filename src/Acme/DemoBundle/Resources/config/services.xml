@@ -14,5 +14,18 @@
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
             <argument type="service" id="twig.extension.acme.demo" />
         </service>
+        
+		<service id="acme.demo.test_service" class="Acme\DemoBundle\Library\TestService">
+			<argument type="service" id="request_stack" />
+		</service>
+
+		<service id="acme.demo.contact_subscriber" class="Acme\DemoBundle\EventListener\ContactSubscriber">
+			<argument type="service" id="acme.demo.test_service" />
+			<tag name="doctrine_mongodb.odm.event_subscriber" />
+		</service>
+		
+		<!-- <service id="acme.demo.contact_subscriber" class="Acme\DemoBundle\EventListener\ContactSubscriber"> 
+			<argument type="service" id="request_stack" /> <tag name="doctrine_mongodb.odm.event_subscriber" 
+			/> </service> -->        
     </services>
 </container>

@@ -32,25 +32,19 @@ class DemoController extends Controller
     }
 
     /**
-     * @Route("/contact", name="_demo_contact")
+     * @Route("/contact/{name}", name="_demo_contact")
      * @Template()
      */
     public function contactAction(Request $request)
     {
-        $form = $this->createForm(new ContactType());
+        $testService = $this->get('acme.demo.test_service');
+        $requestStackName = $testService->getName();
+        
+        $contactDocument = new \Acme\DemoBundle\Document\Contact();
+                
+        $form = $this->createForm(new ContactType(), $contactDocument);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $mailer = $this->get('mailer');
-
-            // .. setup a message and send it
-            // http://symfony.com/doc/current/cookbook/email.html
-
-            $request->getSession()->getFlashBag()->set('notice', 'Message sent!');
-
-            return new RedirectResponse($this->generateUrl('_demo'));
-        }
-
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'name' => $requestStackName);
     }
 }
